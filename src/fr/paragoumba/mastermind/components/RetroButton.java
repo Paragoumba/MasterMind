@@ -1,25 +1,17 @@
 package fr.paragoumba.mastermind.components;
 
 import fr.paragoumba.mastermind.MasterMind;
+import fr.paragoumba.mastermind.ResourceLoader;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class RetroButton extends JComponent implements MouseListener {
+public abstract class RetroButton extends RetroComponent implements MouseListener {
 
-    public RetroButton(String text) {
+    RetroButton() {
 
-        bgColor = new Color(29, 35, 140);
-        brightShadow = new Color(255, 255, 255, 20);
-        darkShadow = new Color(0, 0, 0, 50);
-        textColor = new Color(255, 255, 255, 150);
-        textPressedColor = new Color(0, 0, 0, 100);
-        font = new Font("Press Start 2P", Font.PLAIN, Math.round(1.5f * MasterMind.resolution));
-        this.text = text;
-
-        Dimension size = new Dimension(220, 90);
+        Dimension size = new Dimension(22 * MasterMind.resolution, 9 * MasterMind.resolution);
 
         addMouseListener(this);
         setMinimumSize(size);
@@ -29,59 +21,68 @@ public class RetroButton extends JComponent implements MouseListener {
 
     }
 
-    private boolean pressed = false;
-    private String text;
-    private Color bgColor;
-    private Color brightShadow;
-    private Color darkShadow;
-    private Color textColor;
-    private Color textPressedColor;
-    private Font font;
+    RetroButton(Runnable action){
 
-    @Override
-    protected void paintComponent(Graphics g) {
+        this();
+        this.action = action;
 
-        super.paintComponent(g);
+    }
 
-        g.setColor(bgColor);
-        g.fillRect(MasterMind.resolution, 0, getWidth() - MasterMind.resolution * 2, getHeight());
-        g.fillRect(0, MasterMind.resolution, MasterMind.resolution, getHeight() - MasterMind.resolution * 2);
-        g.fillRect(getWidth() - MasterMind.resolution, MasterMind.resolution, MasterMind.resolution, getHeight() - MasterMind.resolution * 2);
+    boolean pressed = false;
+    boolean disabled = false;
+    private Runnable action = null;
 
-        if (pressed) g.setColor(darkShadow);
-        else g.setColor(brightShadow);
+    public boolean isDisabled() {
 
-        g.fillRect(MasterMind.resolution, 0, getWidth() - MasterMind.resolution * 2, MasterMind.resolution);
-        g.fillRect(getWidth() - MasterMind.resolution * 2, MasterMind.resolution, MasterMind.resolution, MasterMind.resolution);
-        g.fillRect(getWidth() - MasterMind.resolution, MasterMind.resolution, MasterMind.resolution, getHeight() - MasterMind.resolution * 2);
+        return disabled;
 
-        if (pressed) g.setColor(brightShadow);
-        else g.setColor(darkShadow);
+    }
 
-        g.fillRect(MasterMind.resolution, getHeight() - MasterMind.resolution, getWidth() - MasterMind.resolution * 2, MasterMind.resolution);
-        g.fillRect(MasterMind.resolution, getHeight() - MasterMind.resolution * 2, MasterMind.resolution, MasterMind.resolution);
-        g.fillRect(0, MasterMind.resolution, MasterMind.resolution, getHeight() - MasterMind.resolution * 2);
+    public void setDisabled(boolean b){
 
-        g.setFont(font);
-        g.setColor(pressed ? textPressedColor : textColor);
-        g.drawString(text, getWidth() / 2 - g.getFontMetrics().stringWidth(text) / 2, getHeight() / 2 + g.getFontMetrics().getHeight() / 2);
+        disabled = b;
 
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    Color getBGColor() {
+
+        return disabled ? ResourceLoader.bgDisabledColor : ResourceLoader.bgColor;
+
+    }
+
+    @Override
+    Color getPrimaryShadow() {
+
+        return pressed ? ResourceLoader.darkShadow : ResourceLoader.brightShadow;
+
+    }
+
+    @Override
+    Color getSecondaryShadow() {
+
+        return pressed ? ResourceLoader.brightShadow : ResourceLoader.darkShadow;
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+        if (!disabled && action != null) action.run();
+
+    }
 
     @Override
     public void mousePressed(MouseEvent e) {
 
-        pressed = true;
+        if (!disabled) pressed = true;
 
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
 
-        pressed = false;
+        if (!disabled) pressed = false;
 
     }
 

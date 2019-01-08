@@ -2,10 +2,7 @@ package fr.paragoumba.mastermind.objects;
 
 import fr.paragoumba.mastermind.ResourceLoader;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 public enum Token {
 
@@ -26,9 +23,4 @@ public enum Token {
     private int type;
     public BufferedImage image;
 
-    public int getType() {
-
-        return type;
-
-    }
 }

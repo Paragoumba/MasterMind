@@ -1,57 +1,66 @@
-package fr.paragoumba.mastermind.objects;
+package fr.paragoumba.mastermind.components;
 
+import fr.paragoumba.mastermind.MasterMind;
 import fr.paragoumba.mastermind.ResourceLoader;
+import fr.paragoumba.mastermind.objects.Token;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Line extends JComponent {
+public class RetroLine extends RetroComponent {
 
-    public Line(){
+    public RetroLine(){
 
-        setPreferredSize(new Dimension(bg.getWidth(), bg.getHeight()));
+        Dimension size = new Dimension(49 * MasterMind.resolution, 9 * MasterMind.resolution);
+
+        setMinimumSize(size);
+        setPreferredSize(size);
+        setMaximumSize(size);
 
     }
 
     private final int TOKENS_NUMBER = 4;
-
-    public Token[] tokens = new Token[TOKENS_NUMBER];
-
-    public int goodPlacements = 0;
+    Token[] tokens = new Token[TOKENS_NUMBER];
+    int goodPlacements = 0;
     private int badPlacements = 0;
-
-    private BufferedImage bg = ResourceLoader.getImage("row-bg");
 
     @Override
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+        g.setColor(ResourceLoader.brightShadow);
 
-        g.drawImage(bg, 0, 0, null);
+        int i;
 
-        for (int i = 0; i < tokens.length; ++i){
+        for (i = 0; i < 4; ++i){
 
-            if (tokens[i] != null){
+            g.fillRect(MasterMind.resolution * (i + 2) + i * MasterMind.resolution * 5, MasterMind.resolution * 2, 5 * MasterMind.resolution, 5 * MasterMind.resolution);
 
-                g.drawImage(tokens[i].image, i * (tokens[i].image.getWidth() + 10) + 20,  getHeight() / 2 - tokens[i].image.getHeight() / 2, null);
-
-            }
         }
 
-        int halfBGHeight = bg.getHeight() / 2;
-        int i = 0;
-        BufferedImage image = ResourceLoader.getImage("goodp");
+        int offset = MasterMind.resolution * 26;
 
-        for (; i < goodPlacements; ++i) g.drawImage(image, 260 + 15 - image.getHeight() / 2 + i * 40, halfBGHeight - image.getHeight() / 2, null);
+        for (i = 0; i < 4; ++i){
+
+            g.fillRect(offset + i * MasterMind.resolution * 4, MasterMind.resolution * 3, 3 * MasterMind.resolution, 3 * MasterMind.resolution);
+
+        }
+
+        MasterMind.drawTokens(tokens, g, getHeight());
+
+        int halfHeight = getHeight() / 2;
+        BufferedImage image = ResourceLoader.getImage("goodp");
+        i = 0;
+
+        for (; i < goodPlacements; ++i) g.drawImage(image, 260 + 15 - image.getWidth() / 2 + i * 40, halfHeight - image.getHeight() / 2, null);
 
         image = ResourceLoader.getImage("badp");
 
-        for (; i < badPlacements + goodPlacements; ++i) g.drawImage(image, 260 + 15 - image.getHeight() / 2 + i * 40, halfBGHeight - image.getHeight() / 2, null);
+        for (; i < badPlacements + goodPlacements; ++i) g.drawImage(image, 260 + 15 - image.getWidth() / 2 + i * 40, halfHeight - image.getHeight() / 2, null);
 
     }
 
-    public void analyse(Token[] ref){
+    void analyse(Token[] ref){
 
         int[] iIds = new int[]{-1, -1, -1, -1};
         int iId = 0;

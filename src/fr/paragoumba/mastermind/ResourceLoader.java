@@ -11,6 +11,12 @@ public class ResourceLoader {
     private static boolean initialized = false;
     private static HashMap<String, HashMap<String, Object>> resources = new HashMap<>();
 
+    public static Color bgColor = new Color(29, 35, 140);
+    public static Color bgDisabledColor = Color.GRAY;
+    public static final Color textColor = new Color(51, 51, 51);
+    public static final Color brightShadow = new Color(255, 255, 255, 20);
+    public static final Color darkShadow = new Color(0, 0, 0, 50);
+
     private static void loadResources(){
 
         try {
@@ -27,18 +33,13 @@ public class ResourceLoader {
             images.put("type4", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/types/4.png")));
             images.put("type5", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/types/5.png")));
 
-            images.put("btn-background", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/button-2.png")));
-            images.put("btn-pressed-background", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/button-2p.png")));
-
             images.put("badp", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/placements/bad.png")));
             images.put("goodp", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/placements/good.png")));
 
-            images.put("row-bg", ImageIO.read(ResourceLoader.class.getResourceAsStream("res/row.png")));
-
             resources.put("images", images);
 
-            Font pressStartFont = Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.class.getResourceAsStream("res/PressStart2P.ttf"));
-            Font eightBitWonderFont = Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.class.getResourceAsStream("res/8bit_wonder.ttf"));
+            Font pressStartFont = Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.class.getResourceAsStream("res/fonts/PressStart2P.ttf"));
+            Font eightBitWonderFont = Font.createFont(Font.TRUETYPE_FONT, ResourceLoader.class.getResourceAsStream("res/fonts/8bit_wonder.ttf"));
 
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(pressStartFont);
             GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(eightBitWonderFont);

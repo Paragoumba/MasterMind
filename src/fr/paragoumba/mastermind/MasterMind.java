@@ -1,18 +1,17 @@
 package fr.paragoumba.mastermind;
 
-import fr.paragoumba.mastermind.objects.Line;
+import fr.paragoumba.mastermind.components.RetroLine;
+import fr.paragoumba.mastermind.objects.Token;
 import fr.paragoumba.mastermind.panels.GamePanel;
 import fr.paragoumba.mastermind.panels.MenuPanel;
 import fr.paragoumba.mastermind.panels.OptionsPanel;
 import fr.paragoumba.mastermind.panels.StartingPanel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ import static fr.paragoumba.mastermind.panels.GamePanel.tray;
 
 public class MasterMind implements Runnable {
 
-    public static boolean running = true;
+    private static boolean running = true;
 
     private static JPanel[] panels = new JPanel[0];
     public static int displayedPanel;
@@ -28,10 +27,10 @@ public class MasterMind implements Runnable {
     private static int lastFPSDisplay = 0;
 
     private static final String title = "MasterMind";
-    private static final String version = "1.0";
+    private static final String version = "v1.4.2";
     public static int resolution = 10;
 
-    public static final int STARTING_PANEL = registerPanel(new StartingPanel());
+    private static final int STARTING_PANEL = registerPanel(new StartingPanel());
     public static final int MENU_PANEL = registerPanel(new MenuPanel());
     public static final int OPTIONS_PANEL = registerPanel(new OptionsPanel());
     public static final int GAME_PANEL = registerPanel(new GamePanel());
@@ -50,6 +49,8 @@ public class MasterMind implements Runnable {
             if (e.getNewState() == WindowEvent.WINDOW_CLOSED) stop(0);
 
         });
+        window.addKeyListener((KeyListener) panels[GAME_PANEL]);
+        window.addKeyListener((KeyListener) panels[OPTIONS_PANEL]);
         window.setPreferredSize(dimension);
         window.setSize(dimension);
         window.setIconImage(ResourceLoader.getImage("e-penser-icon"));
@@ -107,7 +108,7 @@ public class MasterMind implements Runnable {
             if (i > 59) {
 
                 Point mouse = MouseInfo.getPointerInfo().getLocation();
-                MasterMind.window.setTitle(MasterMind.title + " - " + Math.round(1d / lastFPSDisplay * 1E3 * 60) + "FPS" + " (" + lastFPSDisplay + "ms) " + mouse.x + ":" + mouse.y);
+                MasterMind.window.setTitle(MasterMind.title + " - " + version + " " + Math.round(1d / lastFPSDisplay * 1E3 * 60) + "FPS" + " (" + lastFPSDisplay + "ms) " + mouse.x + ":" + mouse.y);
 
                 i = 0;
                 lastFPSDisplay = 0;
@@ -121,7 +122,7 @@ public class MasterMind implements Runnable {
 
         for (int i = 0; i < tray.length; ++i){
 
-            tray[i] = new Line();
+            tray[i] = new RetroLine();
             panels[displayedPanel].add(tray[i]);
 
         }
@@ -149,5 +150,19 @@ public class MasterMind implements Runnable {
         running = false;
         System.exit(status);
 
+    }
+
+    public static void drawTokens(Token[] tokens, Graphics g, int height){
+
+        height /= 2;
+
+        for (int i = 0; i < tokens.length; ++i){
+
+            if (tokens[i] != null){
+
+                g.drawImage(tokens[i].image, i * (tokens[i].image.getWidth() + 10) + 20,  height - tokens[i].image.getHeight() / 2, null);
+
+            }
+        }
     }
 }

@@ -1,51 +1,36 @@
 package fr.paragoumba.mastermind.panels;
 
 import fr.paragoumba.mastermind.MasterMind;
-import fr.paragoumba.mastermind.components.RetroButton;
+import fr.paragoumba.mastermind.ResourceLoader;
+import fr.paragoumba.mastermind.components.CheckRetroButton;
+import fr.paragoumba.mastermind.components.TextRetroButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import static fr.paragoumba.mastermind.MasterMind.MENU_PANEL;
 
-public class OptionsPanel extends JPanel {
+public class OptionsPanel extends JPanel implements KeyListener {
 
+    TextRetroButton acceptButton;
+    TextRetroButton cancelButton;
+    CheckRetroButton checkRetroButton;
+    
     public OptionsPanel(){
-
-        RetroButton acceptButton = new RetroButton("Accept");
-        RetroButton cancelButton = new RetroButton("Cancel");
-
-        cancelButton.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                MasterMind.setDisplayedPanel(MENU_PANEL);
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {}
-
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-
-        });
+        
+        int r = (int) (System.currentTimeMillis() % 256);
+        
+        acceptButton = new TextRetroButton("Accept", null/* TODO */);
+        cancelButton = new TextRetroButton("Cancel", () -> MasterMind.setDisplayedPanel(MENU_PANEL));
+        checkRetroButton = new CheckRetroButton(() -> ResourceLoader.bgColor = new Color((int) (r * Math.random()), (int) (r * Math.random()), (int) (r * Math.random())));
 
         String text = "Options Panel, welcome home soldier.";
         Font font = new Font("Press Start 2P", Font.PLAIN, 40);
-        String[] array = new String[]{"Jensen", "Rhoades", "Granger"};
+        String[] array = new String[]{"One option", "One another", "And one last"};
 
         JScrollPane listScroller = new JScrollPane(new JList<>(array));
-        //listScroller.setPreferredSize(new Dimension(250, 80));
         listScroller.setAlignmentX(LEFT_ALIGNMENT);
 
         JPanel listPane = new JPanel();
@@ -66,6 +51,7 @@ public class OptionsPanel extends JPanel {
         buttonPane.add(acceptButton);
         buttonPane.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonPane.add(cancelButton);
+        buttonPane.add(checkRetroButton);
 
         add(listPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
@@ -79,7 +65,31 @@ public class OptionsPanel extends JPanel {
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setColor(Color.RED);
-        g.drawRect(0, 0, getWidth(), getHeight());
+        g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+        if (e.getKeyCode() == KeyEvent.VK_SPACE){
+
+            System.out.println("toggling");
+
+            acceptButton.setDisabled(!acceptButton.isDisabled());
+            cancelButton.setDisabled(!cancelButton.isDisabled());
+            checkRetroButton.setDisabled(!checkRetroButton.isDisabled());
+            
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }
