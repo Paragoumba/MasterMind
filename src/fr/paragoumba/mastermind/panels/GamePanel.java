@@ -3,6 +3,7 @@ package fr.paragoumba.mastermind.panels;
 import fr.paragoumba.mastermind.MasterMind;
 import fr.paragoumba.mastermind.ResourceLoader;
 import fr.paragoumba.mastermind.components.RetroLine;
+import fr.paragoumba.mastermind.components.TextRetroButton;
 import fr.paragoumba.mastermind.components.TokenView;
 import fr.paragoumba.mastermind.objects.Token;
 
@@ -12,27 +13,21 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-import static fr.paragoumba.mastermind.MasterMind.GAME_PANEL;
-import static fr.paragoumba.mastermind.MasterMind.initTray;
+import static fr.paragoumba.mastermind.MasterMind.*;
 
 public class GamePanel extends JPanel implements KeyListener {
 
     public GamePanel(){
 
-        Token[] tokens = Token.values();
-        Random random = new Random();
-
-        for (int i = 0; i < secretCombination.length; ++i) secretCombination[i] = tokens[random.nextInt(tokens.length)];
-
-        initTray();
+        launchGame();
         setLayout(new BorderLayout());
 
-        JPanel tray = new JPanel(){
+        JPanel trayPanel = new JPanel(){
 
             @Override
             protected void paintComponent(Graphics g) {
 
-                g.setColor(new Color(29, 35, 140));
+                g.setColor(new Color(150, 255, 0));
                 g.fillRect(0, 0, getWidth(), getHeight());
 
             }
@@ -49,7 +44,7 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         };
 
-        tray.setLayout(new BoxLayout(tray, BoxLayout.PAGE_AXIS));
+        trayPanel.setLayout(new BoxLayout(trayPanel, BoxLayout.PAGE_AXIS));
         selection.setLayout(new BoxLayout(selection, BoxLayout.PAGE_AXIS));
 
         TokenView[] tokenViews = {
@@ -62,9 +57,9 @@ public class GamePanel extends JPanel implements KeyListener {
         };
 
         for (TokenView tokenView : tokenViews) selection.add(tokenView);
-        for (RetroLine line : GamePanel.tray) tray.add(line);
+        for (RetroLine line : tray) trayPanel.add(line);
 
-        add(tray, BorderLayout.LINE_START);
+        add(trayPanel, BorderLayout.LINE_START);
         add(selection, BorderLayout.LINE_END);
 
     }
@@ -73,13 +68,44 @@ public class GamePanel extends JPanel implements KeyListener {
     public static RetroLine[] tray = new RetroLine[lineNumber];
     public static Token[] secretCombination = new Token[4];
 
-    public static int lastLine = 0;
-    public static int lastPosition = 0;
+    public static int lastLine;
+    public static int lastPosition;
 
-    public static boolean playing = true;
-    public static boolean won = false;
+    public static boolean playing;
+    public static boolean won;
 
     private static Font font = new Font("Press Start 2P", Font.PLAIN, 60);
+
+    private void launchGame(){
+
+        lastLine = 0;
+        lastPosition = 0;
+        playing = true;
+        won = false;
+
+        setSecretCombinaison();
+        initTray();
+
+    }
+
+    private void initTray(){
+
+        for (int i = 0; i < tray.length; ++i){
+
+            if (tray[i] == null) tray[i] = new RetroLine();
+            else tray[i].clear();
+
+        }
+    }
+
+    private void setSecretCombinaison(){
+
+        Token[] tokens = Token.values();
+        Random random = new Random();
+
+        for (int i = 0; i < secretCombination.length; ++i) secretCombination[i] = tokens[random.nextInt(tokens.length)];
+
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -134,20 +160,21 @@ public class GamePanel extends JPanel implements KeyListener {
                     @Override
                     protected void paintComponent(Graphics g) {
 
-                        g.setColor(new Color(255, 255, 0, 50));
+                        g.setColor(new Color(255, 255, 0, 150));
                         g.fillRect(0, 0, getWidth(), getHeight());
 
                     }
                 };
 
-                panel.setOpaque(false);
+                //panel.setOpaque(false);
                 panel.setPreferredSize(new Dimension(100, 100));
+                panel.add(new TextRetroButton("Test"));
 
-                add(panel, 0, 0);
+                add(panel, 0);
 
             } else if (e.getKeyCode() == KeyEvent.VK_R){
 
-                MasterMind.initTray();
+                launchGame();
 
             }
         }

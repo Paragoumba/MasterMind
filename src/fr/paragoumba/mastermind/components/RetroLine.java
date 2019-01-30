@@ -19,7 +19,7 @@ public class RetroLine extends RetroComponent {
 
     }
 
-    private final int TOKENS_NUMBER = 4;
+    private static final int TOKENS_NUMBER = 4;
     Token[] tokens = new Token[TOKENS_NUMBER];
     int goodPlacements = 0;
     private int badPlacements = 0;
@@ -60,7 +60,7 @@ public class RetroLine extends RetroComponent {
 
     }
 
-    void analyse(Token[] ref){
+    void analyze(Token[] ref){
 
         int[] iIds = new int[]{-1, -1, -1, -1};
         int iId = 0;
@@ -107,5 +107,14 @@ public class RetroLine extends RetroComponent {
                 }
             }
         }
+    }
+
+    public void clear(){
+
+        for (int i = 0; i < tokens.length; ++i) tokens[i] = null;
+
+        goodPlacements = 0;
+        badPlacements = 0;
+
     }
 }

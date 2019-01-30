@@ -19,7 +19,9 @@ public class OptionsPanel extends JPanel implements KeyListener {
     CheckRetroButton checkRetroButton;
     
     public OptionsPanel(){
-        
+
+        super(new BorderLayout());
+
         int r = (int) (System.currentTimeMillis() % 256);
         
         acceptButton = new TextRetroButton("Accept", null/* TODO */);

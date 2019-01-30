@@ -1,6 +1,5 @@
 package fr.paragoumba.mastermind;
 
-import fr.paragoumba.mastermind.components.RetroLine;
 import fr.paragoumba.mastermind.objects.Token;
 import fr.paragoumba.mastermind.panels.GamePanel;
 import fr.paragoumba.mastermind.panels.MenuPanel;
@@ -9,13 +8,10 @@ import fr.paragoumba.mastermind.panels.StartingPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Objects;
-
-import static fr.paragoumba.mastermind.panels.GamePanel.tray;
 
 public class MasterMind implements Runnable {
 
@@ -27,7 +23,7 @@ public class MasterMind implements Runnable {
     private static int lastFPSDisplay = 0;
 
     private static final String title = "MasterMind";
-    private static final String version = "v1.4.2";
+    private static final String version = "v1.5.1";
     public static int resolution = 10;
 
     private static final int STARTING_PANEL = registerPanel(new StartingPanel());
@@ -58,7 +54,7 @@ public class MasterMind implements Runnable {
         window.setTitle(title);
 
         /* StartingPanel */
-        if (window.getState() != JFrame.ICONIFIED) window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        window.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         setDisplayedPanel(STARTING_PANEL);
         window.setVisible(true);
@@ -116,16 +112,6 @@ public class MasterMind implements Runnable {
             }
         }
 
-    }
-
-    public static void initTray(){
-
-        for (int i = 0; i < tray.length; ++i){
-
-            tray[i] = new RetroLine();
-            panels[displayedPanel].add(tray[i]);
-
-        }
     }
 
     private static int registerPanel(JPanel panel){

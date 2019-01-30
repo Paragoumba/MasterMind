@@ -39,7 +39,7 @@ public class TokenView extends JComponent implements MouseListener {
 
             if (lastPosition > 3){
 
-                tray[lastLine].analyse(secretCombination);
+                tray[lastLine].analyze(secretCombination);
 
                 if (tray[lastLine].goodPlacements == 4){
 
